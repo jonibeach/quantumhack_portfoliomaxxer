@@ -1,0 +1,22 @@
+qiskit_runtime_service._discover_account:WARNING:2026-06-06 21:09:42,997: Loading account with the given token. A saved account will not be used.
+qiskit_runtime_service._discover_account:WARNING:2026-06-06 21:09:45,720: Loading account with the given token. A saved account will not be used.
+qiskit_runtime_service.__init__:WARNING:2026-06-06 21:09:50,791: Instance was not set at service instantiation. Free and trial plan instances will be prioritized. Based on the following filters: (tags: None, region: us-east, eu-de), and available plans: (flex), the available account instances are: Team 7 Instance. If you need a specific instance set it explicitly either by using a saved account with a saved default instance or passing it in directly to QiskitRuntimeService().
+qiskit_runtime_service.backends:WARNING:2026-06-06 21:09:50,791: Loading instance: Team 7 Instance, plan: flex
+qiskit_runtime_service.backends:WARNING:2026-06-06 21:09:54,350: Loading instance: Team 7 Instance, plan: flex
+qiskit_runtime_service.backends:WARNING:2026-06-06 21:09:55,451: Using instance: Team 7 Instance, plan: flex
+[ibm] connect attempt failed: IBMInputValueError: 'The instance specified (Tvg0BY411m-dbd02e8d-08d9-472d-b7cf-77d3bf72e910) is not a valid instance name.'
+[ibm] connected (instance=auto)
+[ibm] backend = ibm_pittsburgh  nq=156
+[ibm] bell: routed 2q=1 depth=7 creg=meas
+[ibm] collapsed7: routed 2q=5 depth=22 creg=c
+[ibm] bond31: routed 2q=36 depth=151 creg=c
+[ibm] job id = d8i64t5v8cos73f56qi0  submitted, waiting for result ...
+Traceback (most recent call last):
+  File "/Users/joni/personal/hackathons/dqi-immunization/artifacts/ibm/run_ibm.py", line 133, in <module>
+    main()
+  File "/Users/joni/personal/hackathons/dqi-immunization/artifacts/ibm/run_ibm.py", line 88, in main
+    res = job.result()
+          ^^^^^^^^^^^^
+  File "/Users/joni/personal/hackathons/dqi-immunization/.venv/lib/python3.12/site-packages/qiskit_ibm_runtime/runtime_job_v2.py", line 140, in result
+    raise RuntimeInvalidStateError(
+qiskit_ibm_runtime.exceptions.RuntimeInvalidStateError: 'Unable to retrieve result for job d8i64t5v8cos73f56qi0. Job was cancelled.'

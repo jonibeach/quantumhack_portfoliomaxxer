@@ -1,0 +1,61 @@
+
+########################################################################################
+# PART A — decoder x size x ell SCALING (BCH/Hamming duals, m_field in {3,4,5})
+########################################################################################
+  [          BP] len= 7 n=3 ell=1 q=21  IQM-CZ= 385(d 703) routed-CZ= 766(d1343)  rand=3.5 opt=6  mean=4.292/7 P(opt)=0.322
+  [algebraic-t1] len= 7 n=3 ell=1 q=11  IQM-CZ=  86(d 165) routed-CZ= 158(d 263)  rand=3.5 opt=6  mean=5.041/7 P(opt)=0.524
+  [         GJE] len= 7 n=3 ell=1 q=10  IQM-CZ=  30(d  47) routed-CZ=  53(d  65)  rand=3.5 opt=6  mean=3.497/7 P(opt)=0.127
+  [          BP] len= 7 n=3 ell=2 q=21  IQM-CZ= 431(d 812) routed-CZ= 857(d1548)  rand=3.5 opt=6  mean=4.088/7 P(opt)=0.274
+  [algebraic-t1] len= 7 n=3 ell=2 q=11  IQM-CZ= 132(d 266) routed-CZ= 250(d 461)  rand=3.5 opt=6  mean=4.566/7 P(opt)=0.467
+  [         GJE] len= 7 n=3 ell=2 q=10  IQM-CZ=  76(d 148) routed-CZ= 137(d 268)  rand=3.5 opt=6  mean=3.488/7 P(opt)=0.123
+  [          BP] len= 7 n=3 ell=3 q=21  IQM-CZ= 470(d 887) routed-CZ= 924(d1654)  rand=3.5 opt=6  mean=3.999/7 P(opt)=0.246
+  [algebraic-t1] len= 7 n=3 ell=3 q=11  IQM-CZ= 171(d 343) routed-CZ= 324(d 580)  rand=3.5 opt=6  mean=4.319/7 P(opt)=0.401
+  [         GJE] len= 7 n=3 ell=3 q=10  IQM-CZ= 115(d 225) routed-CZ= 207(d 415)  rand=3.5 opt=6  mean=3.506/7 P(opt)=0.126
+  [          BP] len=15 n=4 ell=1 q=40  IQM-CZ=1889(d3500) routed-CZ=3893(d6905)  rand=7.5 opt=12  NOT SIMULATED (not simulated (qubits>28))
+  [algebraic-t1] len=15 n=4 ell=1 q=21  IQM-CZ= 264(d 504) routed-CZ= 501(d 733)  rand=7.5 opt=12  mean=9.946/15 P(opt)=0.350
+  [         GJE] len=15 n=4 ell=1 q=19  IQM-CZ=  81(d  95) routed-CZ= 183(d 206)  rand=7.5 opt=12  mean=7.482/15 P(opt)=0.061
+  [          BP] len=15 n=4 ell=2 q=40  IQM-CZ=2007(d3789) routed-CZ=4115(d7374)  rand=7.5 opt=12  NOT SIMULATED (not simulated (qubits>28))
+  [algebraic-t1] len=15 n=4 ell=2 q=21  IQM-CZ= 382(d 769) routed-CZ= 740(d1263)  rand=7.5 opt=12  mean=9.236/15 P(opt)=0.305
+  [         GJE] len=15 n=4 ell=2 q=19  IQM-CZ= 199(d 360) routed-CZ= 442(d 715)  rand=7.5 opt=12  mean=7.525/15 P(opt)=0.066
+  [          BP] len=15 n=4 ell=3 q=40  IQM-CZ=2118(d3991) routed-CZ=4370(d7681)  rand=7.5 opt=12  NOT SIMULATED (not simulated (qubits>28))
+  [algebraic-t1] len=15 n=4 ell=3 q=21  IQM-CZ= 493(d 979) routed-CZ= 928(d1573)  rand=7.5 opt=12  mean=8.481/15 P(opt)=0.211
+  [         GJE] len=15 n=4 ell=3 q=19  IQM-CZ= 310(d 570) routed-CZ= 651(d1082)  rand=7.5 opt=12  mean=7.515/15 P(opt)=0.067
+  [          BP] len=31 n=5 ell=1 q=73  IQM-CZ=7729(d14568) routed-CZ=15539(d28295)  rand=15.5 opt=20  NOT SIMULATED (not simulated (qubits>28))
+  [algebraic-t1] len=31 n=5 ell=1 q=39  IQM-CZ= 703(d1334) routed-CZ=1427(d1861)  rand=15.5 opt=20  NOT SIMULATED (not simulated (qubits>28))
+  [         GJE] len=31 n=5 ell=1 q=36  IQM-CZ= 200(d 190) routed-CZ= 554(d 438)  rand=15.5 opt=20  NOT SIMULATED (not simulated (qubits>28))
+  [          BP] len=31 n=5 ell=2 q=73  IQM-CZ=7991(d15224) routed-CZ=16116(d29202)  rand=15.5 opt=20  NOT SIMULATED (not simulated (qubits>28))
+  [algebraic-t1] len=31 n=5 ell=2 q=39  IQM-CZ= 965(d1929) routed-CZ=2027(d3038)  rand=15.5 opt=20  NOT SIMULATED (not simulated (qubits>28))
+  [         GJE] len=31 n=5 ell=2 q=36  IQM-CZ= 462(d 785) routed-CZ=1176(d1553)  rand=15.5 opt=20  NOT SIMULATED (not simulated (qubits>28))
+  [          BP] len=31 n=5 ell=3 q=73  IQM-CZ=8246(d15677) routed-CZ=16728(d30207)  rand=15.5 opt=20  NOT SIMULATED (not simulated (qubits>28))
+  [algebraic-t1] len=31 n=5 ell=3 q=39  IQM-CZ=1220(d2401) routed-CZ=2500(d3948)  rand=15.5 opt=20  NOT SIMULATED (not simulated (qubits>28))
+  [         GJE] len=31 n=5 ell=3 q=36  IQM-CZ= 717(d1257) routed-CZ=1672(d2375)  rand=15.5 opt=20  NOT SIMULATED (not simulated (qubits>28))
+
+########################################################################################
+# PART B — does a GENUINE portfolio AMPLIFY under the ACTUAL BP circuit?
+########################################################################################
+# (real factor-model sub-universe; constraint families reduced to weight-2
+#  diversify/redundant core so the BP circuit fits <=28 qubits — stated honestly)
+
+  --- GENUINE portfolio: 6 assets (AAPL, MSFT, NVDA, JPM, BAC, GS) ---
+      encoded B = 6 constraints x 6 assets (weight-2 core, red_thresh=0.64)
+      dual code: dim=1 dmin=3; brute-force optimum=5/6 (frustrated: True); random=3.00/6; BP qubits~24
+      [ BP] ell=1 q=24 IQM-CZ=1748(d3264)  sim mean=3.768/6 P(opt)=0.238  -> AMPLIFIES
+      [GJE] ell=1 q=12 IQM-CZ=  36(d  56)  sim mean=3.006/6 P(opt)=0.092  -> flat (~random)
+      [ BP] ell=2 q=24 IQM-CZ=1785(d3352)  sim mean=3.685/6 P(opt)=0.260  -> AMPLIFIES
+      [GJE] ell=2 q=12 IQM-CZ=  73(d 135)  sim mean=3.002/6 P(opt)=0.094  -> flat (~random)
+      [ BP] ell=3 q=24 IQM-CZ=1815(d3411)  sim mean=3.442/6 P(opt)=0.204  -> AMPLIFIES
+      [GJE] ell=3 q=12 IQM-CZ= 103(d 195)  sim mean=3.020/6 P(opt)=0.095  -> flat (~random)
+
+  --- GENUINE portfolio: 7 assets (AAPL, MSFT, NVDA, JPM, BAC, GS, XOM) ---
+      encoded B = 6 constraints x 7 assets (weight-2 core, red_thresh=0.64)
+      dual code: dim=1 dmin=3; brute-force optimum=5/6 (frustrated: True); random=3.00/6; BP qubits~25
+      [ BP] ell=1 q=25 IQM-CZ=1965(d3709)  sim mean=3.772/6 P(opt)=0.237  -> AMPLIFIES
+      [GJE] ell=1 q=13 IQM-CZ=  37(d  57)  sim mean=3.014/6 P(opt)=0.096  -> flat (~random)
+      [ BP] ell=2 q=25 IQM-CZ=2002(d3796)  sim mean=3.675/6 P(opt)=0.251  -> AMPLIFIES
+      [GJE] ell=2 q=13 IQM-CZ=  74(d 136)  sim mean=3.012/6 P(opt)=0.095  -> flat (~random)
+      [ BP] ell=3 q=25 IQM-CZ=2032(d3855)  sim mean=3.446/6 P(opt)=0.209  -> AMPLIFIES
+      [GJE] ell=3 q=13 IQM-CZ= 104(d 196)  sim mean=3.003/6 P(opt)=0.091  -> flat (~random)
+
+========================================================================================
+DONE in 93.2s. Wrote artifacts/lumi/sweep_results.json and artifacts/lumi/sweep_results.csv (39 rows).
+========================================================================================

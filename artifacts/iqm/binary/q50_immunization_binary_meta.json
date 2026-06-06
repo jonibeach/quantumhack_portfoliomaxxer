@@ -1,0 +1,154 @@
+{
+  "instance": "7-bond fixed-income immunization (m_field=3, t=1, ell=1) \u2014 BINARY RE-ENCODING (t=1 syndrome-basis collapse, 3 qubits)",
+  "encoding": {
+    "description": "For t=1 over GF(2) the single-error location->syndrome map is a bijection on {0..7}. The 7-qubit one-hot error register + ancilla + reversible Hamming decode of the 11-qubit circuit COLLAPSE into the 3-qubit syndrome register. The DQI computation reduces to: prepare pre-H amplitude vector a, apply H^3, measure. Same output distribution as the 11-qubit circuit, in 3 qubits.",
+    "syndrome_map_p_to_s": [
+      1,
+      2,
+      4,
+      3,
+      6,
+      7,
+      5
+    ],
+    "syndrome_map_is_bijection_1_to_7": true,
+    "optimal_weights_w": [
+      0.7071067811865476,
+      0.7071067811865476
+    ],
+    "v_phase_flip_syndromes": [
+      1,
+      2,
+      5,
+      6
+    ],
+    "pre_H_amplitude_vector_a": [
+      0.7071067811865476,
+      -0.2672612419124244,
+      -0.2672612419124244,
+      0.2672612419124244,
+      0.2672612419124244,
+      -0.2672612419124244,
+      -0.2672612419124244,
+      0.2672612419124244
+    ]
+  },
+  "B": [
+    [
+      1,
+      0,
+      0
+    ],
+    [
+      0,
+      1,
+      0
+    ],
+    [
+      0,
+      0,
+      1
+    ],
+    [
+      1,
+      1,
+      0
+    ],
+    [
+      0,
+      1,
+      1
+    ],
+    [
+      1,
+      1,
+      1
+    ],
+    [
+      1,
+      0,
+      1
+    ]
+  ],
+  "v": [
+    1,
+    1,
+    0,
+    0,
+    1,
+    0,
+    1
+  ],
+  "n": 3,
+  "m": 7,
+  "num_qubits": 3,
+  "iqm_logical_cz": 4,
+  "iqm_depth": 11,
+  "routed_cz_line": 5,
+  "routed_depth_line": 15,
+  "routed_cz_triangle": 4,
+  "routed_depth_triangle": 11,
+  "optimum": 7,
+  "random_mean_satisfied": 3.5,
+  "random_p_opt": 0.125,
+  "simulated_mean_satisfied": 6.314453125,
+  "simulated_p_opt": 0.82861328125,
+  "statevector_p_opt": 0.8307189138830731,
+  "sim_shots": 16384,
+  "baseline_11q": {
+    "qubits": 11,
+    "logical_cz": 86,
+    "routed_cz": 154,
+    "depth": 226,
+    "hardware_result": "decohered to random (P(opt) 0.122 vs random 0.125)"
+  },
+  "bond_ladder": {
+    "maturities": [
+      1.0049582906585588,
+      2.0122920571808582,
+      3.0809360141291613,
+      4.181990732730154,
+      5.1910885061964365,
+      6.243981071760082,
+      7.273826673183317
+    ],
+    "locators": [
+      1,
+      2,
+      4,
+      3,
+      6,
+      7,
+      5
+    ]
+  },
+  "financial_readout": {
+    "best_bitstring": [
+      1,
+      1,
+      0
+    ],
+    "satisfies": 7,
+    "included_bonds": [
+      3
+    ],
+    "bond_details": [
+      {
+        "bond": 3,
+        "maturity": 4.181990732730154,
+        "locator": 3
+      }
+    ]
+  },
+  "readout": {
+    "description": "Measured bitstring from measure_all() on 3 qubits = the syndrome register. Strip spaces, REVERSE to little-endian, the solution vars x are bits[0:3] (no offset \u2014 no y register). satisfied(x) = sum((B @ x) % 2 == v).",
+    "m_offset": 0,
+    "n_vars": 3,
+    "bit_order": "reverse measured string, then index [0:3]"
+  },
+  "provenance": {
+    "generator": "scripts/immunization_binary.py",
+    "amplitude_vector": "computed from (optimal weights, syndrome map, v-signs) \u2014 NOT hardcoded",
+    "no_hardware_submission": true
+  }
+}

@@ -1,0 +1,91 @@
+{
+  "instance": "7-bond fixed-income immunization (m_field=3, t=1, ell=1)",
+  "B": [
+    [
+      1,
+      0,
+      0
+    ],
+    [
+      0,
+      1,
+      0
+    ],
+    [
+      0,
+      0,
+      1
+    ],
+    [
+      1,
+      1,
+      0
+    ],
+    [
+      0,
+      1,
+      1
+    ],
+    [
+      1,
+      1,
+      1
+    ],
+    [
+      1,
+      0,
+      1
+    ]
+  ],
+  "v": [
+    1,
+    1,
+    0,
+    0,
+    1,
+    0,
+    1
+  ],
+  "n": 3,
+  "m": 7,
+  "num_qubits": 11,
+  "iqm_cz_local_estimate": 86,
+  "optimum": 7,
+  "n_optimal_assignments": 1,
+  "n_assignments": 8,
+  "random_mean_satisfied": 3.5,
+  "random_p_opt": 0.125,
+  "simulated_mean_satisfied": 6.319580078125,
+  "simulated_p_opt": 0.82989501953125,
+  "simulated_sat_histogram": {
+    "3": 2787,
+    "7": 13597
+  },
+  "sim_shots": 16384,
+  "bond_ladder": {
+    "maturities": [
+      1.0049582906585588,
+      2.0122920571808582,
+      3.0809360141291613,
+      4.181990732730154,
+      5.1910885061964365,
+      6.243981071760082,
+      7.273826673183317
+    ],
+    "locators": [
+      1,
+      2,
+      4,
+      3,
+      6,
+      7,
+      5
+    ]
+  },
+  "readout": {
+    "description": "Measured bitstring bs from measure_all(). Strip spaces, REVERSE (bs[::-1]) to get little-endian bit array 'bits'. The solution register x (n=3 vars) is bits[m : m+n] where m=7. Register layout is y(7) + x(3) + anc(1) = 11 qubits; measure_all appends classical bits in qubit order, and after reversal x occupies indices 7,8,9. satisfied(x) = sum((B @ x) % 2 == v).",
+    "m_offset": 7,
+    "n_vars": 3,
+    "bit_order": "reverse measured string, then index [m : m+n]"
+  }
+}

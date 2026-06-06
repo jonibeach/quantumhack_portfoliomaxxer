@@ -1,0 +1,44 @@
+{
+  "job_slurm": "19082355",
+  "iqm_job_bare": "7e30aa29-f24f-47a5-8941-3302e3975905",
+  "iqm_job_ems": "ac03217c-4173-4b94-b63b-ceda17f8d0c5",
+  "timestamp_utc": "2026-06-06T10:38:57Z",
+  "shots": 2000,
+  "bare_routed_cz": 154,
+  "bare_depth": 226,
+  "bare_seed": 3,
+  "ems_routed_cz": 167,
+  "ems_depth": 256,
+  "calibration": {
+    "backend_name": "IQMBackend",
+    "num_qubits": 53
+  },
+  "qpu_url": "https://qx.vtt.fi/",
+  "table": {
+    "random": {
+      "mean_over_7": 3.5,
+      "p_opt": 0.125
+    },
+    "simulator": {
+      "mean_over_7": 6.319580078125,
+      "p_opt": 0.82989501953125
+    },
+    "q50_bare": {
+      "mean_over_7": 3.486,
+      "p_opt": 0.1215
+    },
+    "q50_ems": {
+      "mean_over_7": 3.5457025920873124,
+      "p_opt": 0.1364256480218281
+    }
+  },
+  "bare_satisfied_histogram": {
+    "3": 0.8785,
+    "7": 0.1215
+  },
+  "ems_satisfied_histogram": {
+    "3": 0.8635743519781719,
+    "7": 0.1364256480218281
+  },
+  "ems_note": "EMS get_counts returned quasi-probability weights (floats, many zero/negative from error-mitigation post-processing). mean/P(opt) computed by weighting bitstrings by their positive EMS weight; negatives clipped to 0."
+}

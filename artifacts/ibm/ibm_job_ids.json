@@ -1,0 +1,30 @@
+{
+  "backend": "ibm_marrakesh",
+  "shots": 4096,
+  "jobs": {
+    "bell": {
+      "job_id": "d8i6j8pe8nrc73bhv8dg",
+      "creg": "meas",
+      "routed_2q": 1,
+      "depth": 7
+    },
+    "collapsed7": {
+      "job_id": "d8i6j942upec739lrdc0",
+      "creg": "c",
+      "routed_2q": 7,
+      "depth": 31
+    },
+    "bond31": {
+      "job_id": "d8i6j9dv8cos73f57acg",
+      "creg": "c",
+      "routed_2q": 34,
+      "depth": 145
+    },
+    "full7": {
+      "job_id": "d8i6j9k2upec739lrddg",
+      "creg": "c",
+      "routed_2q": 224,
+      "depth": 468
+    }
+  }
+}

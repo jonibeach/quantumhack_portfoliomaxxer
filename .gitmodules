@@ -1,0 +1,6 @@
+[submodule "external/bcg-dqi"]
+	path = external/bcg-dqi
+	url = https://github.com/bcg-x-official/dqi.git
+[submodule "external/DQI-Circuit"]
+	path = external/DQI-Circuit
+	url = https://github.com/BankNatchapol/DQI-Circuit.git

@@ -1,0 +1,19 @@
+This software collection is provided and supported by Quantum Computing team of
+CSC.
+Run `module help Local-quantum` for more information about support.
+Not all software may be compatible with software in other stacks,
+so mix at your own risk. 
+/LUMI_TYKKY_KV8Bb9K/miniforge/envs/env1/lib/python3.11/site-packages/iqm/qiskit_iqm/iqm_provider.py:194: UserWarning: Unknown backend option(s): {'rep_delay': None, 'job_tags': ['M3 calibration']}
+  warnings.warn(f"Unknown backend option(s): {unknown_options}")
+[circ] qubits= 5 ops= OrderedDict([('rz', 31), ('rx', 27), ('cx', 26), ('measure', 5), ('ry', 4), ('h', 4), ('barrier', 1)])
+[plumbing] backend.name = IQMBackend
+[plumbing] backend.num_qubits = 53
+[bare] seed sweep: [{'seed': 0, 'cz': 31, 'depth': 64}, {'seed': 1, 'cz': 31, 'depth': 63}, {'seed': 2, 'cz': 29, 'depth': 60}, {'seed': 3, 'cz': 29, 'depth': 60}, {'seed': 4, 'cz': 31, 'depth': 61}, {'seed': 5, 'cz': 29, 'depth': 60}, {'seed': 6, 'cz': 29, 'depth': 60}, {'seed': 7, 'cz': 31, 'depth': 63}, {'seed': 8, 'cz': 31, 'depth': 63}, {'seed': 9, 'cz': 29, 'depth': 60}, {'seed': 10, 'cz': 31, 'depth': 63}, {'seed': 11, 'cz': 31, 'depth': 64}, {'seed': 12, 'cz': 29, 'depth': 60}, {'seed': 13, 'cz': 31, 'depth': 64}, {'seed': 14, 'cz': 29, 'depth': 60}, {'seed': 15, 'cz': 31, 'depth': 64}]
+[bare] CHOSEN routed cz= 29 depth= 60 seed= 2 shots= 2000
+[bare] layout= {'initial_layout_virt_to_phys': {'3': 3, '0': 0, '1': 1, '2': 2, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9, '10': 10, '11': 11, '12': 12, '13': 13, '14': 14, '15': 15, '16': 16, '17': 17, '18': 18, '19': 19, '20': 20, '21': 21, '22': 22, '23': 23, '24': 24, '25': 25, '26': 26, '27': 27, '28': 28, '29': 29, '30': 30, '31': 32, '32': 33, '33': 34, '34': 35, '35': 36, '36': 37, '37': 41, '38': 42, '39': 43, '40': 44, '41': 46, '42': 47, '43': 48, '44': 49, '45': 50, '46': 51, '47': 52}, 'initial_physical_qubits': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52], 'final_index_layout': [39, 45, 38, 31, 40], 'relabeled_qubits_used': [48, 49, 50, 51, 52]}
+[bare] job id= 4d769408-0f2e-4a13-b1a2-f42b8157fad1
+[bare_counts] {'11110': 50, '01110': 49, '10000': 50, '00010': 62, '01010': 34, '11101': 307, '00101': 62, '01100': 67, '10001': 50, '11010': 46, '11111': 87, '10100': 59, '11000': 70, '11100': 39, '00001': 39, '00100': 69, '10011': 26, '10110': 68, '10111': 56, '01111': 34, '10101': 106, '01101': 67, '11011': 45, '01001': 45, '00011': 37, '10010': 56, '00110': 47, '11001': 64, '00111': 40, '00000': 67, '01011': 31, '01000': 71}
+[ems] routed cz= 29 depth= 60 seed= 2
+[ems] job id= f99c9f06-a68a-4b0e-9f12-a64c9bd72e9e
+[ems_counts] {'00011': 29, '10011': 32, '01011': 33, '00001': 34, '11011': 34, '00111': 36, '00101': 37, '11100': 39, '01001': 39, '10001': 40, '01111': 42, '01110': 45, '10100': 45, '11001': 49, '10110': 49, '10111': 50, '10000': 52, '11010': 53, '11110': 54, '00110': 57, '00010': 57, '00100': 63, '01010': 63, '11000': 64, '01101': 66, '00000': 69, '10010': 69, '01000': 74, '01100': 79, '11111': 122, '10101': 130, '11101': 276}
+WROTE q50_binary_gf5_result_raw.json

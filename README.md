@@ -1,0 +1,84 @@
+# DQI for fixed-income immunization
+
+Code and experimental artifacts for *“Towards DQI for finance applications.”*
+
+Decoded Quantum Interferometry (DQI) turns max-XORSAT optimization into a
+**decoding** problem, and amplifies good solutions cheaply only when the
+constraint matrix is the parity check of an **algebraically decodable** code.
+We show that **fixed-income immunization** is a finance-motivated source of
+exactly that structure: a portfolio's interest-rate sensitivities (duration,
+convexity, key-rate durations) are successive *moments of maturity*, so
+moment matching is a **Vandermonde / locator** system — i.e. a BCH/Reed–Solomon
+parity check, decodable by **Berlekamp–Massey** rather than generic belief
+propagation.
+
+We pose a finite-field combinatorial surrogate of immunization as max-XORSAT,
+compare three in-circuit decoder regimes on the *same* instances, run the
+genuine multi-error decoder in simulation, and execute the `t=1` collapse on the
+53-qubit **VTT Q50** processor (6.0× amplification at 7 bonds, 4.9× at 31 bonds).
+
+## Layout
+
+```
+dqi_portfolio/            core package
+  dqi_algebraic.py        ← Berlekamp–Massey decoder, GF(2^m) arithmetic, BCH,
+                            t=1/t=2 datapaths, RS-Forney, resource estimation  (the contribution)
+  immunization.py         maturity → locator mapping; immunization == BCH instance
+  dqi.py                  belief-propagation (BP) regime  [wraps external/bcg-dqi]
+  dqi_gje.py              Gauss–Jordan (GJE) regime        [wraps external/DQI-Circuit]
+  metrics.py              gate/depth counting
+  _vendor.py              puts the two submodules on sys.path (they aren't pip-installable)
+external/                 BP & GJE baselines as pinned git submodules (see NOTICE.md)
+scripts/                  one script per reported result (see table below)
+artifacts/
+  lumi/                   statevector decoder-regime sweep (CSV/JSON) — paper Table 2
+  iqm/                    VTT Q50 runs: QASM, raw results, submission scripts, circuit renders
+```
+
+The three `build_dqi_circuit*` functions share a signature so the decoder can be
+swapped on a fixed instance — that swap *is* the paper's central experiment.
+
+## Install
+
+```bash
+git submodule update --init        # fetch the BP & GJE baselines (external/)
+uv sync                            # or:  python -m venv .venv && pip install -e .
+```
+
+Core deps are just `qiskit`, `qiskit-aer`, `numpy`, `scipy`, `matplotlib`.
+The two submodules under `external/` supply the BP and GJE decoder baselines;
+they are not pip-installable, so `dqi_portfolio/_vendor.py` adds them to the path.
+Running on the QPU additionally needs the `qpu` extra (`pip install -e '.[qpu]'`).
+
+## Reproduce the results
+
+Run from the repo root as modules (so cross-script imports resolve):
+
+| Script | Paper result |
+|---|---|
+| `python -m scripts.algebraic_prototype` | algebraic decoder, BCH-7/15 `t=1` (regime sweep) |
+| `python -m scripts.algebraic_t2_prototype` | `t=2` exact + measured BM sub-blocks |
+| `python -m scripts.bm_datapath_t2` | **genuine reversible Berlekamp–Massey** `t=2` (bch-7-t2, 28q/632 CZ) ⚠ heavy |
+| `python -m scripts.rs_forney_symbol` | symbol-level Reed–Solomon Forney decoder (rs-sym, 37q/668 CZ) |
+| `python -m scripts.bp_vs_gje` | BP vs GJE gate-count baselines |
+| `python -m scripts.verify_gje` | GJE control (stays at random floor) |
+| `python -m scripts.immunization_binary` | **7-bond `t=1` collapse** → Q50 (154→5 CZ) |
+| `python -m scripts.immunization_binary_gf5` | **31-bond `t=1` collapse** → Q50 (29 routed CZ) |
+| `python -m scripts.immunization_prototype` | immunization driver / structural-match check |
+| `python -m scripts.render_t1_7bond_circuit` | the 11-qubit circuit figures |
+| `python -m scripts.iqm_access_check` | Q50 routing check (needs `qpu` extra) |
+| `python -m scripts.dqi_t2_deliverables` | `t=2` validation/resource/noise tables |
+
+Hardware runs themselves are not submitted from here; the Q50 QASM, runners, and
+SLURM scripts live under `artifacts/iqm/` (results in
+`artifacts/iqm/q50_immunization_results.md`).
+
+## Scope
+
+This solves a **finite-field combinatorial surrogate** of immunization
+(“which weight-`t` subset of bonds is the odd-one-out for the binarised moment
+syndrome over GF(2^m)?”), faithful to immunization's *algebra* but not its
+real-valued cash flows. See the paper's Discussion for the full list of
+limitations. The BP and GJE regimes are vendored third-party baselines
+(`NOTICE.md`); everything in `dqi_algebraic.py`, `immunization.py`, and
+`scripts/` is original.

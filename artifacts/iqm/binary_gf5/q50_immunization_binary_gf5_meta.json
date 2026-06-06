@@ -1,0 +1,557 @@
+{
+  "instance": "31-bond fixed-income immunization (m_field=5, t=1, ell=1) \u2014 BINARY RE-ENCODING (t=1 syndrome-basis collapse, 5 qubits)",
+  "encoding": {
+    "description": "For t=1 over GF(2) the single-error location->syndrome map is a bijection on {0..31}. The 31-qubit one-hot error register + ancilla + reversible Hamming decode of the faithful GF(2^5) circuit COLLAPSE into the 5-qubit syndrome register. The DQI computation reduces to: prepare pre-H amplitude vector a, apply H^5, measure. Same ideal DQI output distribution, in 5 qubits.",
+    "syndrome_map_p_to_s": [
+      1,
+      2,
+      4,
+      8,
+      16,
+      5,
+      10,
+      20,
+      13,
+      26,
+      17,
+      7,
+      14,
+      28,
+      29,
+      31,
+      27,
+      19,
+      3,
+      6,
+      12,
+      24,
+      21,
+      15,
+      30,
+      25,
+      23,
+      11,
+      22,
+      9,
+      18
+    ],
+    "syndrome_map_is_bijection_1_to_31": true,
+    "optimal_weights_w": [
+      0.7071067811865476,
+      0.7071067811865476
+    ],
+    "v_phase_flip_syndromes": [
+      1,
+      3,
+      4,
+      6,
+      8,
+      10,
+      13,
+      15,
+      16,
+      18,
+      21,
+      23,
+      25,
+      27,
+      28,
+      30
+    ],
+    "pre_H_amplitude_vector_a": [
+      0.7071067811865476,
+      -0.1270001270001905,
+      0.1270001270001905,
+      -0.1270001270001905,
+      -0.1270001270001905,
+      0.1270001270001905,
+      -0.1270001270001905,
+      0.1270001270001905,
+      -0.1270001270001905,
+      0.1270001270001905,
+      -0.1270001270001905,
+      0.1270001270001905,
+      0.1270001270001905,
+      -0.1270001270001905,
+      0.1270001270001905,
+      -0.1270001270001905,
+      -0.1270001270001905,
+      0.1270001270001905,
+      -0.1270001270001905,
+      0.1270001270001905,
+      0.1270001270001905,
+      -0.1270001270001905,
+      0.1270001270001905,
+      -0.1270001270001905,
+      0.1270001270001905,
+      -0.1270001270001905,
+      0.1270001270001905,
+      -0.1270001270001905,
+      -0.1270001270001905,
+      0.1270001270001905,
+      -0.1270001270001905,
+      0.1270001270001905
+    ]
+  },
+  "B": [
+    [
+      1,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      1,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      1,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      1,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      1
+    ],
+    [
+      1,
+      0,
+      1,
+      0,
+      0
+    ],
+    [
+      0,
+      1,
+      0,
+      1,
+      0
+    ],
+    [
+      0,
+      0,
+      1,
+      0,
+      1
+    ],
+    [
+      1,
+      0,
+      1,
+      1,
+      0
+    ],
+    [
+      0,
+      1,
+      0,
+      1,
+      1
+    ],
+    [
+      1,
+      0,
+      0,
+      0,
+      1
+    ],
+    [
+      1,
+      1,
+      1,
+      0,
+      0
+    ],
+    [
+      0,
+      1,
+      1,
+      1,
+      0
+    ],
+    [
+      0,
+      0,
+      1,
+      1,
+      1
+    ],
+    [
+      1,
+      0,
+      1,
+      1,
+      1
+    ],
+    [
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    [
+      1,
+      1,
+      0,
+      1,
+      1
+    ],
+    [
+      1,
+      1,
+      0,
+      0,
+      1
+    ],
+    [
+      1,
+      1,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      1,
+      1,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      1,
+      1,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      1,
+      1
+    ],
+    [
+      1,
+      0,
+      1,
+      0,
+      1
+    ],
+    [
+      1,
+      1,
+      1,
+      1,
+      0
+    ],
+    [
+      0,
+      1,
+      1,
+      1,
+      1
+    ],
+    [
+      1,
+      0,
+      0,
+      1,
+      1
+    ],
+    [
+      1,
+      1,
+      1,
+      0,
+      1
+    ],
+    [
+      1,
+      1,
+      0,
+      1,
+      0
+    ],
+    [
+      0,
+      1,
+      1,
+      0,
+      1
+    ],
+    [
+      1,
+      0,
+      0,
+      1,
+      0
+    ],
+    [
+      0,
+      1,
+      0,
+      0,
+      1
+    ]
+  ],
+  "v": [
+    1,
+    0,
+    1,
+    1,
+    1,
+    0,
+    1,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    1,
+    0,
+    1,
+    1,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1
+  ],
+  "n": 5,
+  "m": 31,
+  "num_qubits": 5,
+  "iqm_logical_cz": 26,
+  "iqm_depth": 58,
+  "routed_cz_line": 47,
+  "routed_depth_line": 123,
+  "routed_cz_ring": 34,
+  "routed_depth_ring": 81,
+  "line_edges": [
+    [
+      0,
+      1
+    ],
+    [
+      1,
+      2
+    ],
+    [
+      2,
+      3
+    ],
+    [
+      3,
+      4
+    ]
+  ],
+  "ring_edges": [
+    [
+      0,
+      1
+    ],
+    [
+      1,
+      2
+    ],
+    [
+      2,
+      3
+    ],
+    [
+      3,
+      4
+    ],
+    [
+      4,
+      0
+    ],
+    [
+      0,
+      2
+    ]
+  ],
+  "structured_variant": {
+    "logical_cz": 26,
+    "depth": 60,
+    "routed_cz_line": 55,
+    "routed_cz_ring": 36
+  },
+  "optimum": 31,
+  "optimum_x": [
+    1,
+    0,
+    1,
+    1,
+    1
+  ],
+  "optimum_x_int": 29,
+  "random_mean_satisfied": 15.5,
+  "random_p_opt": 0.03125,
+  "classical_mean_satisfied": 25.78388218141501,
+  "statevector_mean_satisfied": 25.783882181414878,
+  "statevector_p_opt": 0.6739926363384352,
+  "simulated_mean_satisfied": 25.66015625,
+  "simulated_p_opt": 0.666259765625,
+  "sim_shots": 16384,
+  "lift_note": "Milder lift than the 7-bond case (P(opt)~0.67 vs 0.83): with ell=1 and 31 constraints the degree-1 DQI polynomial concentrates less. This is the honest, expected behaviour at GF(2^5) scale.",
+  "routing_note": "Logical CZ ~26 (all-to-all). A BARE 5-qubit LINE cannot route a dense 5-qubit StatePreparation under the 40-CZ wall (best ~47 over a seed sweep); the denser RING+chord map routes to ~34 CZ, UNDER the wall, and is the shippable layout. Q50's native connectivity is denser than a line, so the ring number is the operative one. Routed counts are the best over a 40-seed SABRE sweep.",
+  "coherence_wall_routed_cz": 40,
+  "routed_cz_seed_sweep": true,
+  "baseline_11q": {
+    "qubits": 11,
+    "logical_cz": 86,
+    "routed_cz": 154,
+    "depth": 226,
+    "hardware_result": "decohered to random (P(opt) 0.122 vs random 0.125)"
+  },
+  "baseline_binary_7bond": {
+    "qubits": 3,
+    "logical_cz": 4,
+    "routed_cz": 5,
+    "depth": 11,
+    "p_opt": 0.8307,
+    "note": "7-bond GF(2^3) binary collapse (scripts/immunization_binary.py)"
+  },
+  "bond_ladder": {
+    "n_bonds": 31,
+    "maturities": [
+      1.0008215500510445,
+      2.004958290658559,
+      3.0084959013436388,
+      4.010075672591639,
+      5.012292057180859,
+      6.03728498294987,
+      7.052696686180767,
+      8.080936014129161,
+      9.089913567161215,
+      10.115103266278565,
+      11.126806166359298,
+      12.162438366074728,
+      13.163087497439626,
+      14.181990732730155,
+      15.184615533444376,
+      16.191088506196436,
+      17.194156853472276,
+      18.195137782880344,
+      19.20118732440809,
+      20.205662595344208,
+      21.206534019171283,
+      22.218848968295198,
+      23.218896633928985,
+      24.243981071760082,
+      25.24475606623646,
+      26.25722128297627,
+      27.258953676704966,
+      28.273826673183315,
+      29.280521727136332,
+      30.294250601632868,
+      31.299162980736764
+    ],
+    "locators": [
+      1,
+      2,
+      4,
+      8,
+      16,
+      5,
+      10,
+      20,
+      13,
+      26,
+      17,
+      7,
+      14,
+      28,
+      29,
+      31,
+      27,
+      19,
+      3,
+      6,
+      12,
+      24,
+      21,
+      15,
+      30,
+      25,
+      23,
+      11,
+      22,
+      9,
+      18
+    ],
+    "description": "31-bond ladder: bond j has locator alpha^j in GF(2^5) and an increasing maturity ~ (j+1) years. DQI selects the locator pattern (subset) that best matches the liability syndrome v."
+  },
+  "financial_readout": {
+    "best_bitstring": [
+      1,
+      0,
+      1,
+      1,
+      1
+    ],
+    "satisfies": 31,
+    "included_bonds": [
+      14
+    ],
+    "bond_details": [
+      {
+        "bond": 14,
+        "maturity": 15.184615533444376,
+        "locator": 29
+      }
+    ],
+    "residual": {
+      "field_syndrome": [
+        29,
+        22
+      ],
+      "field_nonzero_syndromes": 2,
+      "real_moment_readout_LABELLED": {
+        "duration_sum_tau": 15.184615533444376,
+        "convexity_sum_tau2": 230.5725488985202,
+        "n_bonds": 1
+      }
+    }
+  },
+  "readout": {
+    "description": "Measured bitstring from measure_all() on 5 qubits = the syndrome register. Strip spaces, REVERSE to little-endian, the solution vars x are bits[0:5] (no offset \u2014 no y register). satisfied(x) = sum((B @ x) % 2 == v).",
+    "m_offset": 0,
+    "n_vars": 5,
+    "bit_order": "reverse measured string, then index [0:5]"
+  },
+  "provenance": {
+    "generator": "scripts/immunization_binary_gf5.py",
+    "amplitude_vector": "computed from (optimal weights, syndrome map, v-signs) \u2014 NOT hardcoded",
+    "no_hardware_submission": true,
+    "field": "GF(2^5)"
+  }
+}

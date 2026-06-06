@@ -1,0 +1,14 @@
+This software collection is provided and supported by Quantum Computing team of
+CSC.
+Run `module help Local-quantum` for more information about support.
+Not all software may be compatible with software in other stacks,
+so mix at your own risk. 
+[plumbing] timestamp_utc = 2026-06-06T10:23:43.377105Z
+[plumbing] Q50_CORTEX_URL = https://qx.vtt.fi/
+[plumbing] backend.name = IQMBackend
+[plumbing] backend.num_qubits = 53
+[plumbing] transpiled.depth = 4
+[plumbing] transpiled.count_ops = {'r': 3, 'measure': 2, 'cz': 1, 'barrier': 1}
+[plumbing] transpiled.num_qubits = 53
+[plumbing] job submitted, id = 031c3518-b5fa-4b35-b252-7c2c0a426c42
+[result] counts = {'11': 446, '00': 526, '10': 21, '01': 7}
