@@ -26,7 +26,7 @@ RUN pip install --no-cache-dir uv && \
     uv pip install --system --no-cache \
       "qiskit==2.1.2" \
       "qiskit-aer==0.17.2" \
-      "qiskit-ibm-runtime==0.47.0" \
+      "qiskit-ibm-runtime==0.45.0" \
       "numpy==2.4.6" \
       "scipy==1.17.1"
 
