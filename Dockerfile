@@ -48,4 +48,4 @@ ENV NODE_ENV=production \
 
 EXPOSE 3000
 WORKDIR /app/web
-CMD ["node", "node_modules/next/dist/bin/next", "start", "-H", "0.0.0.0", "-p", "3000"]
+CMD ["node", "node_modules/next/dist/bin/next", "start", "-H", "0.0.0.0"]
