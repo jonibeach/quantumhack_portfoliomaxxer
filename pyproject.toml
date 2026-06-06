@@ -17,6 +17,8 @@ dependencies = [
 # QPU execution / device-aware transpilation on VTT Q50 (IQM hardware).
 # Only needed by scripts/iqm_access_check.py and artifacts/iqm/q50_run_*.py.
 qpu = ["iqm-client[qiskit]>=34.0.3"]
+# IBM Quantum execution used by the web app bridge (webapp_cli) + artifacts/ibm/.
+ibm = ["qiskit-ibm-runtime>=0.40"]
 
 [build-system]
 requires = ["hatchling"]

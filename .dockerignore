@@ -1,0 +1,19 @@
+# Python
+.venv/
+**/__pycache__/
+*.pyc
+
+# Node (rebuilt inside the image)
+web/node_modules/
+web/.next/
+
+# Repo bulk not needed at runtime
+.git/
+external/
+artifacts/
+notes/
+*.out
+
+# Local env (creds come from Railway secrets at runtime)
+.env
+web/.env
