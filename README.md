@@ -2,20 +2,40 @@
 
 Code and experimental artifacts for *“Towards DQI for finance applications.”*
 
-Decoded Quantum Interferometry (DQI) turns max-XORSAT optimization into a
-**decoding** problem, and amplifies good solutions cheaply only when the
-constraint matrix is the parity check of an **algebraically decodable** code.
-We show that **fixed-income immunization** is a finance-motivated source of
-exactly that structure: a portfolio's interest-rate sensitivities (duration,
-convexity, key-rate durations) are successive *moments of maturity*, so
-moment matching is a **Vandermonde / locator** system — i.e. a BCH/Reed–Solomon
-parity check, decodable by **Berlekamp–Massey** rather than generic belief
-propagation.
+Decoded Quantum Interferometry (DQI) is a new *fully quantum* (not hybrid)
+optimization algorithm whose advantage hinges on a single requirement: the
+problem must be expressible as the parity-check matrix of an error-correcting
+code. For generic problems this structure is absent. We identify **fixed-income
+immunization** as a finance problem that natively fulfills it. The fundamental
+goal of immunization is to ensure a financial institution can always meet its
+future payment obligations (liabilities), regardless of whether interest rates
+rise or fall — and because a portfolio's interest-rate sensitivities (duration,
+convexity, key-rate durations) are successive *moments of maturity*, moment
+matching is a **Vandermonde / locator** system, i.e. a BCH/Reed–Solomon parity
+check decodable by **Berlekamp–Massey**.
 
-We pose a finite-field combinatorial surrogate of immunization as max-XORSAT,
-compare three in-circuit decoder regimes on the *same* instances, run the
-genuine multi-error decoder in simulation, and execute the `t=1` collapse on the
-53-qubit **VTT Q50** processor (6.0× amplification at 7 bonds, 4.9× at 31 bonds).
+We formalize a finite-field, combinatorial surrogate of immunization, cast it as
+a max-XORSAT instance, and show via **statevector simulation** that DQI
+amplifies good solutions *only* when this algebraic code structure is present,
+at low circuit cost. We then run the circuits on **two real superconducting
+processors**. On IQM's 53-qubit **VTT Q50**, the `t=1` bijection collapse
+amplifies above random — **6.0× at 7 bonds** (5 routed two-qubit gates) and
+**4.9× at 31 bonds** (29 routed gates) — fitting under the device's ~40-gate
+coherence wall. On IBM's 156-qubit **Heron r2** (`ibm_marrakesh`), the same
+collapsed instances reach **6.26× and 15.7× over random**, and the **full,
+un-collapsed 11-qubit DQI circuit** — 224 routed two-qubit gates, including the
+one-hot error register and reversible decode/uncompute — **retains a signal
+through the entire decoder** (1.69× over random, peaked on the true optimum),
+where it had decohered to uniform on Q50. Finally, in simulation we build and
+verify the **genuine multi-error (`t=2`) reversible Berlekamp–Massey decoder** —
+the real DQI, where the decoder *is* the circuit run in superposition —
+preserving full amplification (**23.8× lift**) at 28 qubits / 632 two-qubit
+gates with polynomial scaling.
+
+These results do not constitute a production immunization optimizer; rather,
+they establish the problem as a finance-motivated structure in which DQI's
+decoding requirement is naturally satisfied, and demonstrate above-random
+amplification on present-day hardware.
 
 ## Layout
 
@@ -33,6 +53,7 @@ scripts/                  one script per reported result (see table below)
 artifacts/
   lumi/                   statevector decoder-regime sweep (CSV/JSON) — paper Table 2
   iqm/                    VTT Q50 runs: QASM, raw results, submission scripts, circuit renders
+  ibm/                    IBM Heron r2 runs: submit/poll/fetch jobs, raw counts
 ```
 
 The three `build_dqi_circuit*` functions share a signature so the decoder can be
