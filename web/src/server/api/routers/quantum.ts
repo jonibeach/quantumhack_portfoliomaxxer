@@ -12,7 +12,6 @@ import {
 
 const runInput = z.object({
   size: z.union([z.literal(7), z.literal(15), z.literal(31)]),
-  liability: z.number().int().min(0),
   maturities: z.array(z.number().positive()).optional(),
 });
 
@@ -21,9 +20,6 @@ export const quantumRouter = createTRPCRouter({
 
   // Submit to real IBM hardware. Rate-limited + budget-guarded.
   run: publicProcedure.input(runInput).mutation(async ({ input }) => {
-    if (input.liability >= input.size) {
-      throw new TRPCError({ code: "BAD_REQUEST", message: "liability index out of range" });
-    }
     const decision = reserveQpuSlot();
     if (!decision.ok) {
       throw new TRPCError({
@@ -32,7 +28,7 @@ export const quantumRouter = createTRPCRouter({
       });
     }
     try {
-      const res = await quantumCli.submit(input.size, input.liability, input.maturities);
+      const res = await quantumCli.submit(input.size, input.maturities);
       markInflight(res.job_id);
       return res;
     } catch (e) {
@@ -56,7 +52,6 @@ export const quantumRouter = createTRPCRouter({
       const res = await quantumCli.result(
         input.jobId,
         input.size,
-        input.liability,
         input.maturities,
       );
       if (res.done) releaseInflight(input.jobId);

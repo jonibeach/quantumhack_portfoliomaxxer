@@ -145,7 +145,7 @@ export function ImmunizationApp() {
         <SectionHead
           numeral="IV"
           title="The instrument"
-          dek="Compose a maturity ladder, name the liability it is tuned to, and watch the decoder pick out the odd-one-out, in simulation and on hardware."
+          dek="Compose a maturity ladder. One bond is secretly mis-tuned — watch the decoder pick out the odd-one-out, in simulation and on hardware."
         />
         <Instrument />
 
@@ -176,7 +176,6 @@ function Instrument() {
   const [size, setSize] = useState<Size>(7);
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState<Bond[]>([]);
-  const [liability, setLiability] = useState(0);
 
   const search = api.bonds.search.useQuery(
     { query },
@@ -187,20 +186,20 @@ function Instrument() {
   });
 
   // Ladder = selected bonds sorted ascending by maturity (canonical order the
-  // Python side also uses). The liability index points into this order.
+  // Python side also uses; the hidden saboteur is seeded by this ladder).
   const ladder = useMemo(
     () => [...selected].sort((a, b) => a.maturityYears - b.maturityYears),
     [selected],
   );
   const maturities = ladder.map((b) => b.maturityYears);
-  const ready = selected.length === size && liability < size;
+  const ready = selected.length === size;
 
   const preview = api.immunization.preview.useMutation();
   const run = api.quantum.run.useMutation();
 
   const [jobId, setJobId] = useState<string | null>(null);
   const poll = api.quantum.poll.useQuery(
-    { jobId: jobId!, size, liability, maturities },
+    { jobId: jobId!, size, maturities },
     {
       enabled: !!jobId,
       refetchInterval: (q) => (q.state.data?.done ? false : 4000),
@@ -208,15 +207,27 @@ function Instrument() {
     },
   );
 
+  // The bond(s) the decoder revealed as mis-tuned, from whichever result is
+  // showing (hardware takes precedence once done). Used to light up the ladder.
+  const revealed = useMemo(() => {
+    const shown = poll.data?.done ? poll.data : preview.data;
+    return new Set(shown?.decoded.bond_details.map((d) => d.bond) ?? []);
+  }, [poll.data, preview.data]);
+
+  // The hidden saboteur is seeded by the ladder, so any change to it invalidates
+  // a shown result — clear it so the reveal never goes stale.
+  function resetResults() {
+    setJobId(null);
+    preview.reset();
+  }
   function addBond(b: Bond) {
     if (selected.length >= size) return;
     setSelected((s) => [...s, b]);
-    setJobId(null);
+    resetResults();
   }
   function removeBond(i: number) {
     setSelected((s) => s.filter((_, idx) => idx !== i));
-    setLiability(0);
-    setJobId(null);
+    resetResults();
   }
   function fillSample() {
     // Deterministic sample ladder of the right length from the catalog.
@@ -227,17 +238,16 @@ function Instrument() {
       chosen.push(us[i % us.length]!);
     }
     setSelected(chosen.slice(0, size));
-    setLiability(0);
-    setJobId(null);
+    resetResults();
   }
 
   async function doSimulate() {
     setJobId(null);
-    await preview.mutateAsync({ size, liability, maturities });
+    await preview.mutateAsync({ size, maturities });
   }
   async function doRun() {
     setJobId(null);
-    const res = await run.mutateAsync({ size, liability, maturities });
+    const res = await run.mutateAsync({ size, maturities });
     setJobId(res.job_id);
     void budget.refetch();
   }
@@ -254,8 +264,7 @@ function Instrument() {
                 onClick={() => {
                   setSize(s);
                   setSelected([]);
-                  setLiability(0);
-                  setJobId(null);
+                  resetResults();
                 }}
                 className={`px-3 py-3 text-center transition ${
                   size === s
@@ -321,11 +330,13 @@ function Instrument() {
           </div>
         </Card>
 
-        <Card numeral="iii" title="Ladder & liability">
+        <Card numeral="iii" title="The maturity ladder">
           <p className="mb-3 text-sm leading-relaxed text-ink-soft">
-            Sorted by maturity, then mapped onto the code’s locator set. Mark the
-            bond your liability is tuned to, and the decoder finds the
-            odd-one-out that breaks immunization.
+            Sorted by maturity, then mapped onto the code’s locator set α
+            <sup className="text-[0.8em]">i</sup>. One bond is secretly mis-tuned
+            — the odd-one-out that breaks immunization. You don’t pick it; it’s
+            seeded by the ladder. Simulate or run on hardware, and the decoder
+            reveals which one.
           </p>
           {ladder.length === 0 ? (
             <div className="flex h-52 items-center justify-center border border-dashed border-rule/70 bg-paper/40 text-center font-mono text-[11px] uppercase tracking-[0.12em] text-ink-faint">
@@ -333,43 +344,41 @@ function Instrument() {
             </div>
           ) : (
             <div className="h-52 divide-y divide-rule/60 overflow-y-auto border border-rule/60">
-              {ladder.map((b, i) => (
-                <div
-                  key={`${b.id}-${i}`}
-                  className={`flex items-center justify-between px-3 py-2 text-sm transition ${
-                    liability === i ? "bg-accent/10" : "bg-panel"
-                  }`}
-                >
-                  <label className="flex cursor-pointer items-center gap-2.5">
-                    <input
-                      type="radio"
-                      name="liability"
-                      checked={liability === i}
-                      onChange={() => {
-                        setLiability(i);
-                        setJobId(null);
-                      }}
-                      className="accent-accent"
-                    />
-                    <span className="w-7 font-mono text-[11px] text-ink-faint">
-                      α<sup className="text-[0.8em]">{i}</sup>
-                    </span>
-                    <span className="text-ink">
-                      {b.flag} {b.label}
-                    </span>
-                  </label>
-                  <div className="flex items-center gap-3 font-mono text-xs text-ink-faint tnum">
-                    <span>{fmtMat(b.maturityYears)}</span>
-                    <button
-                      onClick={() => removeBond(i)}
-                      className="text-ink-faint transition hover:text-accent"
-                      aria-label="remove bond"
-                    >
-                      ✕
-                    </button>
+              {ladder.map((b, i) => {
+                const isSaboteur = revealed.has(i);
+                return (
+                  <div
+                    key={`${b.id}-${i}`}
+                    className={`flex items-center justify-between px-3 py-2 text-sm transition ${
+                      isSaboteur ? "bg-accent/20" : "bg-panel"
+                    }`}
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <span className="w-7 font-mono text-[11px] text-ink-faint">
+                        α<sup className="text-[0.8em]">{i}</sup>
+                      </span>
+                      <span className="text-ink">
+                        {b.flag} {b.label}
+                      </span>
+                      {isSaboteur && (
+                        <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.1em] text-accent">
+                          ⚠ mis-tuned
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-3 font-mono text-xs text-ink-faint tnum">
+                      <span>{fmtMat(b.maturityYears)}</span>
+                      <button
+                        onClick={() => removeBond(i)}
+                        className="text-ink-faint transition hover:text-accent"
+                        aria-label="remove bond"
+                      >
+                        ✕
+                      </button>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </Card>
@@ -392,9 +401,7 @@ function Instrument() {
         </div>
         {!ready && (
           <p className="text-center font-mono text-[11px] uppercase tracking-[0.12em] text-ink-faint">
-            {selected.length < size
-              ? `pick ${size - selected.length} more bond${size - selected.length === 1 ? "" : "s"} to enable`
-              : "mark a liability to enable"}
+            {`pick ${size - selected.length} more bond${size - selected.length === 1 ? "" : "s"} to enable`}
           </p>
         )}
         {run.error && (
@@ -692,13 +699,23 @@ function ResultCard({
       </div>
 
       <div className="mt-5 border border-rule/70 bg-paper/50 p-3 text-sm">
-        <div className="mb-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-ink-faint">
-          Decoded immunizing readout
+        <div className="mb-1.5 flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.12em] text-ink-faint">
+          <span>Decoded immunizing readout</span>
+          {data.decoded.bond_details.length > 0 &&
+            (data.recovered ? (
+              <span className={`font-semibold ${accentText}`}>
+                ✓ found the hidden bond
+              </span>
+            ) : (
+              <span className="font-semibold text-ink-faint">
+                ✗ noise overwhelmed the readout
+              </span>
+            ))}
         </div>
         {data.decoded.bond_details.length > 0 ? (
           data.decoded.bond_details.map((d) => (
             <div key={d.bond} className="leading-relaxed text-ink-soft">
-              odd-one-out bond{" "}
+              hidden mis-tuned bond{" "}
               <span className={`font-semibold ${accentText}`}>#{d.bond}</span> ·
               maturity {d.maturity.toFixed(2)}y · locator α
               <sup className="text-[0.8em]">{d.bond}</sup> ={" "}

@@ -2,24 +2,27 @@
 
 Subcommands (each prints ONE JSON object to stdout; errors -> {"error": ...} + exit 1):
 
-  instance  --size {7,15,31} --liability I [--maturities csv]
+  instance  --size {7,15,31} [--maturities csv]
             Build the immunization max-XORSAT instance (B, v) for the chosen bond
-            ladder + liability and return the bond<->maturity<->locator table,
-            optimum, and the random baseline. No circuit, no hardware.
+            ladder and return the bond<->maturity<->locator table, the hidden
+            mis-tuned bond, the optimum, and the random baseline. No circuit.
 
-  simulate  --size --liability [--maturities] [--shots N]
+  simulate  --size [--maturities] [--shots N]
             Build the collapsed t=1 DQI circuit, run it on AerSimulator, and return
-            mean satisfied / P(opt) / amplification + the decoded immunizing bond
+            mean satisfied / P(opt) / amplification + the decoded mis-tuned bond
             subset + the per-solution distribution. Instant, free, unlimited.
 
-  submit    --size --liability [--maturities] [--shots 4096] [--backend ...]
+  submit    --size [--maturities] [--shots 4096] [--backend ...]
             Transpile the SAME circuit for an IBM backend and submit it. Returns
             {job_id, backend, routed_2q, depth, shots} immediately (non-blocking).
 
-  result    --job-id ID --size --liability [--maturities]
+  result    --job-id ID --size [--maturities]
             Poll an IBM job. If not done -> {"status": ...}. If done -> the full
             interpreted hardware result (scored against the instance re-derived
-            from --size/--liability), with lift vs random.
+            from --size/--maturities), with lift vs random.
+
+One bond is secretly mis-tuned, seeded deterministically by the ladder (so submit
+and result agree) but never chosen by the user — the decoder discovers it.
 
 The hardware circuit is the binary t=1 "collapse" (build_minimal): for a single
 error over GF(2) the location->syndrome map is a bijection, so the whole DQI
@@ -30,6 +33,7 @@ scripts/immunization_binary.py and dqi_portfolio/immunization.py for the theory.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import sys
@@ -96,7 +100,7 @@ def _fail(msg, code=1):
 
 
 # ---------------------------------------------------------------------------
-# Instance construction (B fixed by the code; v derived from the liability).
+# Instance construction (B fixed by the code; v = the hidden mis-tuned bond).
 # ---------------------------------------------------------------------------
 def _mfield(size):
     if size not in SIZE_TO_MFIELD:
@@ -104,23 +108,58 @@ def _mfield(size):
     return SIZE_TO_MFIELD[size]
 
 
-def _liability_v(code, liability_index):
-    """Target syndrome v for a weight-1 'ideal' liability matched by one bond.
+def _stable_seed(size, maturities):
+    """Process-stable seed for the hidden mis-tuned bond.
 
-    Mirrors dqi_portfolio.immunization._liability_syndrome for t=1, but with a
-    USER-chosen ideal bond instead of a random one: y_L = e_{liability_index},
-    s_L = (H y_L) % 2, v = (H^T s_L) % 2. B is unchanged; only v (the liability)
-    varies. The optimum solution is then x = s_L (satisfies all m constraints).
+    MUST be identical across CLI invocations (submit builds the circuit from v;
+    result re-derives v to score it) — so we hash the instance arguments with
+    sha256, NOT Python's per-process salted hash(). Seeding from the ladder means
+    the saboteur is determined by *the ladder you composed*, reproducibly, but is
+    never picked by the user: the decoder genuinely discovers it.
+    """
+    h = hashlib.sha256()
+    h.update(f"{int(size)}".encode())
+    if maturities:
+        mats = sorted(float(x) for x in maturities)
+        h.update(",".join(f"{x:.6f}" for x in mats).encode())
+    return int.from_bytes(h.digest()[:8], "big")
+
+
+def _planted_v(code, seed):
+    """Target syndrome v for ONE hidden mis-tuned bond, seeded by the ladder.
+
+    A weight-1 'odd-one-out' at position j (drawn from the seed): y_L = e_j,
+    s_L = (H y_L) % 2, v = (H^T s_L) % 2. The optimum solution is x = s_L
+    (satisfies all m constraints), and decoding it recovers position j — the bond
+    the user did NOT choose. This is the honest 'find the needle' instance.
     """
     n = code.n
-    if not (0 <= liability_index < n):
-        _fail(f"liability index must be in [0,{n}) for size {n} (got {liability_index})")
+    j = int(np.random.default_rng(seed).integers(0, n))
     H = np.asarray(code.H, dtype=int) % 2
     y_L = np.zeros(n, dtype=int)
-    y_L[liability_index] = 1
+    y_L[j] = 1
     s_L = (H @ y_L) % 2
     v = (H.T @ s_L) % 2
     return v.astype(int)
+
+
+def _optimum_x(B, v):
+    """Brute-force the max-satisfied solution (n <= 6, so 2^n <= 64 candidates)."""
+    B = np.asarray(B, dtype=int) % 2
+    v = np.asarray(v, dtype=int) % 2
+    _m, n = B.shape
+    best, best_s = None, -1
+    for k in range(1 << n):
+        x = np.array([(k >> i) & 1 for i in range(n)], dtype=int)
+        s = int(np.sum((B @ x) % 2 == v))
+        if s > best_s:
+            best_s, best = s, x
+    return best
+
+
+def _planted_bonds(B, v, code, ladder):
+    """The hidden mis-tuned bond(s): decode the (brute-forced) optimum solution."""
+    return decode_portfolio(code, ladder, _optimum_x(B, v))["included_bonds"]
 
 
 def _make_ladder(m_field, maturities):
@@ -140,11 +179,15 @@ def _make_ladder(m_field, maturities):
     return ladder
 
 
-def _build_instance(size, liability_index, maturities):
-    """Return (B, v, code, ladder, m, n_syn) for the chosen size + liability."""
+def _build_instance(size, maturities):
+    """Return (B, v, code, ladder, m, n_syn) for the chosen bond ladder.
+
+    One bond is secretly mis-tuned (seeded by the ladder, never chosen by the
+    user); the t=1 collapse circuit decodes it. Runs on the QPU.
+    """
     m_field = _mfield(size)
     B, _v_rand, code = build_bch_instance(m_field, 1)
-    v = _liability_v(code, liability_index)
+    v = _planted_v(code, _stable_seed(size, maturities))
     ladder = _make_ladder(m_field, maturities)
     m, n_syn = B.shape  # m positions (= size), n_syn syndrome bits (= m_field)
     return B, v, code, ladder, m, n_syn
@@ -203,6 +246,10 @@ def _score(counts, B, v, code, ladder):
     )
     best_score = int(np.sum((np.asarray(B) % 2 @ np.array(best_x)) % 2 == (np.asarray(v) % 2)))
     readout = decode_portfolio(code, ladder, np.array(best_x))
+    # The hidden mis-tuned bond(s) the ladder planted, and whether the decoder
+    # actually recovered them (the honest "it found the needle" check).
+    planted = sorted(int(b) for b in _planted_bonds(B, v, code, ladder))
+    recovered = sorted(int(b) for b in readout["included_bonds"])
     return {
         "mean": float(r["mean"]),
         "m": int(m),
@@ -217,6 +264,8 @@ def _score(counts, B, v, code, ladder):
         "shots": int(total),
         "best_solution": [int(b) for b in best_x],
         "best_satisfies": best_score,
+        "planted_bonds": planted,
+        "recovered": bool(planted == recovered),
         "decoded": _jsonable(readout),
     }
 
@@ -225,18 +274,17 @@ def _score(counts, B, v, code, ladder):
 # Subcommands.
 # ---------------------------------------------------------------------------
 def cmd_instance(args):
-    B, v, code, ladder, m, n_syn = _build_instance(
-        args.size, args.liability, args.maturities)
+    B, v, code, ladder, m, n_syn = _build_instance(args.size, args.maturities)
     classical = dqi_satisfaction_stats(B, v, code, 1)
     _emit({
         "size": int(args.size),
         "m_field": int(n_syn),
         "n_positions": int(m),
-        "liability_index": int(args.liability),
         "optimum": int(classical["max_satisfied"]),
         "classical_mean_satisfied": float(classical["mean_satisfied"]),
         "random_mean": float(m / 2),
         "random_p": float(1.0 / (1 << n_syn)),
+        "planted_bonds": _planted_bonds(B, v, code, ladder),
         "B": _jsonable(np.asarray(B) % 2),
         "v": _jsonable(np.asarray(v) % 2),
         "bonds": _bond_table(ladder, m),
@@ -247,8 +295,7 @@ def cmd_simulate(args):
     from qiskit_aer import AerSimulator
     from dqi_portfolio.bases import SIM_BASIS
 
-    B, v, code, ladder, m, n_syn = _build_instance(
-        args.size, args.liability, args.maturities)
+    B, v, code, ladder, m, n_syn = _build_instance(args.size, args.maturities)
     qc, _a = _measured_circuit(B, v)
     sim = AerSimulator()
     qct = transpile(qc, sim, basis_gates=SIM_BASIS)
@@ -257,7 +304,6 @@ def cmd_simulate(args):
     out.update({
         "mode": "simulator",
         "size": int(args.size),
-        "liability_index": int(args.liability),
         "bonds": _bond_table(ladder, m),
     })
     _emit(out)
@@ -272,8 +318,7 @@ def _ibm_service():
 
 
 def cmd_submit(args):
-    B, v, code, ladder, m, n_syn = _build_instance(
-        args.size, args.liability, args.maturities)
+    B, v, code, ladder, m, n_syn = _build_instance(args.size, args.maturities)
     qc, _a = _measured_circuit(B, v)
 
     svc = _ibm_service()
@@ -297,14 +342,12 @@ def cmd_submit(args):
         "depth": int(isa.depth()),
         "shots": int(args.shots),
         "size": int(args.size),
-        "liability_index": int(args.liability),
         "seed": int(seed),
     })
 
 
 def cmd_result(args):
-    B, v, code, ladder, m, n_syn = _build_instance(
-        args.size, args.liability, args.maturities)
+    B, v, code, ladder, m, n_syn = _build_instance(args.size, args.maturities)
     svc = _ibm_service()
     job = svc.job(args.job_id)
     status = str(job.status())
@@ -322,7 +365,6 @@ def cmd_result(args):
         "backend": getattr(job, "backend", lambda: None)().name
             if callable(getattr(job, "backend", None)) else None,
         "size": int(args.size),
-        "liability_index": int(args.liability),
         "bonds": _bond_table(ladder, m),
     })
     _emit(out)
@@ -333,8 +375,6 @@ def cmd_result(args):
 # ---------------------------------------------------------------------------
 def _add_common(p, with_shots=True):
     p.add_argument("--size", type=int, required=True, choices=sorted(SIZE_TO_MFIELD))
-    p.add_argument("--liability", type=int, default=0,
-                   help="index of the 'ideal' liability bond (0-based)")
     p.add_argument("--maturities", type=str, default=None,
                    help="comma-separated real maturities (years); must match size")
     if with_shots:

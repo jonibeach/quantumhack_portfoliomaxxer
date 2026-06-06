@@ -110,7 +110,7 @@ export interface InstanceResult {
   size: number;
   m_field: number;
   n_positions: number;
-  liability_index: number;
+  planted_bonds: number[];
   optimum: number;
   classical_mean_satisfied: number;
   random_mean: number;
@@ -141,13 +141,14 @@ export interface ScoreResult {
   shots: number;
   best_solution: number[];
   best_satisfies: number;
+  planted_bonds: number[];
+  recovered: boolean;
   decoded: {
     included_bonds: number[];
     bond_details: DecodedBond[];
     residual: unknown;
   };
   size: number;
-  liability_index: number;
   bonds: BondRow[];
 }
 
@@ -158,7 +159,6 @@ export interface SubmitResult {
   depth: number;
   shots: number;
   size: number;
-  liability_index: number;
   seed: number;
 }
 
@@ -175,27 +175,22 @@ export interface HardwarePoll extends ScoreResult {
 }
 export type PollResult = PendingPoll | HardwarePoll;
 
-function common(size: number, liability: number, maturities?: number[]): string[] {
-  const a = ["--size", String(size), "--liability", String(liability)];
+function common(size: number, maturities?: number[]): string[] {
+  const a = ["--size", String(size)];
   if (maturities?.length) a.push("--maturities", maturities.join(","));
   return a;
 }
 
 export const quantumCli = {
-  instance: (size: number, liability: number, maturities?: number[]) =>
-    runCli<InstanceResult>(["instance", ...common(size, liability, maturities)]),
+  instance: (size: number, maturities?: number[]) =>
+    runCli<InstanceResult>(["instance", ...common(size, maturities)]),
 
-  simulate: (size: number, liability: number, maturities?: number[]) =>
-    runCli<ScoreResult>(["simulate", ...common(size, liability, maturities)]),
+  simulate: (size: number, maturities?: number[]) =>
+    runCli<ScoreResult>(["simulate", ...common(size, maturities)]),
 
-  submit: (size: number, liability: number, maturities?: number[]) =>
-    runCli<SubmitResult>(["submit", ...common(size, liability, maturities)], 180_000),
+  submit: (size: number, maturities?: number[]) =>
+    runCli<SubmitResult>(["submit", ...common(size, maturities)], 180_000),
 
-  result: (jobId: string, size: number, liability: number, maturities?: number[]) =>
-    runCli<PollResult>([
-      "result",
-      "--job-id",
-      jobId,
-      ...common(size, liability, maturities),
-    ]),
+  result: (jobId: string, size: number, maturities?: number[]) =>
+    runCli<PollResult>(["result", "--job-id", jobId, ...common(size, maturities)]),
 };

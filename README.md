@@ -28,7 +28,7 @@ dqi_portfolio/            core package
   dqi_gje.py              Gauss–Jordan (GJE) regime        [wraps external/DQI-Circuit]
   metrics.py              gate/depth counting
   _vendor.py              puts the two submodules on sys.path (they aren't pip-installable)
-external/                 BP & GJE baselines as pinned git submodules (see NOTICE.md)
+external/                 BP & GJE baselines as pinned git submodules
 scripts/                  one script per reported result (see table below)
 artifacts/
   lumi/                   statevector decoder-regime sweep (CSV/JSON) — paper Table 2
@@ -79,6 +79,58 @@ This solves a **finite-field combinatorial surrogate** of immunization
 (“which weight-`t` subset of bonds is the odd-one-out for the binarised moment
 syndrome over GF(2^m)?”), faithful to immunization's *algebra* but not its
 real-valued cash flows. See the paper's Discussion for the full list of
-limitations. The BP and GJE regimes are vendored third-party baselines
-(`NOTICE.md`); everything in `dqi_algebraic.py`, `immunization.py`, and
+limitations. The BP and GJE regimes are vendored third-party baselines; everything in `dqi_algebraic.py`, `immunization.py`, and
 `scripts/` is original.
+
+## References, credits & thanks
+
+This work stands on other people's code and papers. Thank you to the authors below.
+
+### Vendored code
+
+The two in-circuit decoder baselines we compare against are pinned git
+submodules — we wrap them, we did not write them:
+
+- **BP regime** — [`bcg-x-official/dqi`](https://github.com/bcg-x-official/dqi),
+  accompanying Sabater, El Harzli, Besjes, Erdmann, Klepsch, Hiltrop, Bobier,
+  Cao & Riofrío, *“Towards Solving Industrial Integer Linear Programs with
+  Decoded Quantum Interferometry,”* [arXiv:2509.08328](https://arxiv.org/abs/2509.08328)
+  (2025). Quantum belief-propagation decoder + ILP→max-XORSAT pipeline.
+- **GJE regime** — [`BankNatchapol/DQI-Circuit`](https://github.com/BankNatchapol/DQI-Circuit),
+  accompanying *“Quantum Circuit Design for Decoded Quantum Interferometry,”*
+  [arXiv:2504.18334](https://arxiv.org/abs/2504.18334). Gauss–Jordan /
+  BPQM / USD circuit implementations of DQI.
+
+### Foundational paper
+
+- S. P. Jordan, N. Shutty, M. Wootters, A. Zalcman, A. Schmidhuber, R. King,
+  S. V. Isakov & R. Babbush (Google Quantum AI),
+  *“Optimization by Decoded Quantum Interferometry,”*
+  [arXiv:2408.08292](https://arxiv.org/abs/2408.08292); Nature **646** (2025),
+  [doi:10.1038/s41586-025-09527-5](https://doi.org/10.1038/s41586-025-09527-5).
+  DQI itself, and the OPI Reed–Solomon advantage witness our immunization
+  mapping mirrors.
+
+### DQI literature we drew on
+
+- *Optimization of Quadratic Constraints by DQI* — [arXiv:2510.08061](https://arxiv.org/abs/2510.08061)
+  (closest machinery to portfolio risk; the diagonality gap).
+- *A nearly linear-time DQI algorithm for OPI* — [arXiv:2601.15171](https://arxiv.org/abs/2601.15171).
+- *Tight inapproximability of max-LINSAT and implications for DQI* — [arXiv:2603.04540](https://arxiv.org/abs/2603.04540).
+- *Algebraic Geometry Codes and DQI* — [arXiv:2510.06603](https://arxiv.org/abs/2510.06603).
+- *DQI for Weighted Optimization Problems* — [arXiv:2605.10666](https://arxiv.org/abs/2605.10666).
+- *Verifiable Quantum Advantage via Optimized DQI Circuits* — [arXiv:2510.10967](https://arxiv.org/abs/2510.10967).
+- *DQI Under Noise* — [arXiv:2508.10725](https://arxiv.org/abs/2508.10725);
+  [doi:10.1088/2058-9565/ae4536](https://doi.org/10.1088/2058-9565/ae4536).
+
+### Hardware & compute
+
+- **VTT Q50** — the 53-qubit superconducting processor the `t=1` collapse ran on,
+  accessed through the **LUMI** supercomputer (CSC / EuroHPC JU; JQH2026
+  reservation).
+- **IBM Quantum** — additional hardware runs (`ibm_marrakesh`).
+- Built with [Qiskit](https://www.ibm.com/quantum/qiskit) and
+  [Qiskit Aer](https://github.com/Qiskit/qiskit-aer), plus IQM's Qiskit-on-IQM
+  stack for Q50 access.
+
+Parts of this codebase were developed with the assistance of [Claude](https://claude.com/claude-code).
